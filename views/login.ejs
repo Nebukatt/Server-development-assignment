@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Font Awesome for Icons -->
+    <link
+      rel="stylesheet"
+      href="https://netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+  </head>
+
+  <body>
+    <!-- Navbar -->
+    <%- include('partials/navbar.ejs') %>
+
+    <div class="container mt-5">
+      <div class="row justify-content-center">
+        <div class="col-lg-4 col-md-6 col-sm-8">
+          <!-- Login Card -->
+          <div class="login-container">
+            <!-- Title -->
+            <div class="login-title text-center">
+              <h2>
+                <span
+                  >Server Deployment <strong> Course Assignment </strong></span
+                >
+              </h2>
+            </div>
+
+            <div class="login-content">
+              <!-- Header -->
+              <div class="login-header text-center">
+                <h3><strong>Login,</strong></h3>
+                <h5>Please login or create an account</h5>
+              </div>
+
+              <!-- Login Form -->
+              <div class="login-body">
+                <form id="login-form" method="POST" action="/auth/login">
+                  <!-- Username Field with Icon -->
+                  <div class="form-group pos-r">
+                    <input
+                      type="text"
+                      class="form-control form-username"
+                      id="login"
+                      name="login"
+                      placeholder="Username"
+                      required
+                    />
+                    <i class="fa fa-user"></i>
+                  </div>
+
+                  <!-- Password Field with Icon -->
+                  <div class="form-group pos-r mt-2">
+                    <input
+                      type="password"
+                      class="form-control form-password"
+                      id="password"
+                      name="password"
+                      placeholder="Password"
+                      required
+                    />
+                    <i class="fa fa-lock"></i>
+                  </div>
+
+                  <!-- Submit Button -->
+                  <div class="form-group mt-3">
+                    <button type="submit" class="btn btn-noroff w-100">
+                      <strong>Sign In</strong>
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="login-footer text-center">
+              <p>
+                Don't have an Admin account? Create one in your Cloud Database
+                first!
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Form submission logic using fetch API
+      document
+        .getElementById("login-form")
+        .addEventListener("submit", function (e) {
+          e.preventDefault(); // Prevent default form submission
+
+          const login = document.getElementById("login").value;
+          const password = document.getElementById("password").value;
+
+          // Send credentials to the server
+          fetch("/auth/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ login, password }),
+          })
+            .then((response) => {
+              if (!response.ok) {
+                return response.json().then((err) => {
+                  throw new Error(err.error || "Login failed");
+                });
+              }
+              return response.json();
+            })
+            .then((data) => {
+              alert(data.message); // Show success message
+              window.location.href = "/participants/index"; // Redirect to participants page
+            })
+            .catch((error) => {
+              alert(error.message); // Show error message
+              console.error("Error:", error);
+            });
+        });
+    </script>
+  </body>
+</html>
